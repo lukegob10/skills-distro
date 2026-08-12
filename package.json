@@ -1,0 +1,121 @@
+{
+  "name": "agentic-toolbox",
+  "displayName": "Agentic Toolbox",
+  "description": "A fast, local skills and AGENTS.md hub for every workspace.",
+  "version": "0.1.5",
+  "publisher": "local-tooling",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lukegob10/skills-distro.git"
+  },
+  "homepage": "https://github.com/lukegob10/skills-distro#readme",
+  "bugs": {
+    "url": "https://github.com/lukegob10/skills-distro/issues"
+  },
+  "icon": "media/marketplace-icon.png",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "agents",
+    "skills",
+    "AGENTS.md",
+    "ai",
+    "local"
+  ],
+  "activationEvents": [
+    "onView:agenticToolbox.panel"
+  ],
+  "main": "./dist/extension.js",
+  "files": [
+    "dist/**",
+    "media/**",
+    "README.md",
+    "LICENSE"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "agentic-toolbox",
+          "title": "Agentic Toolbox",
+          "icon": "media/orbit-core-activity.svg"
+        }
+      ]
+    },
+    "views": {
+      "agentic-toolbox": [
+        {
+          "type": "webview",
+          "id": "agenticToolbox.panel",
+          "name": "Agentic Toolbox"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "agenticToolbox.refresh",
+        "title": "Agentic Toolbox: Refresh Libraries",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "agenticToolbox.open",
+        "title": "Agentic Toolbox: Open"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "agenticToolbox.refresh",
+          "when": "view == agenticToolbox.panel",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Agentic Toolbox",
+      "properties": {
+        "agenticToolbox.skillsLibrary": {
+          "type": "string",
+          "default": "",
+          "scope": "window",
+          "description": "Absolute path to the local skills library. Configure this from the Agentic Toolbox panel."
+        },
+        "agenticToolbox.agentsLibrary": {
+          "type": "string",
+          "default": "",
+          "scope": "window",
+          "description": "Absolute path to the local AGENTS.md profile library. Configure this from the Agentic Toolbox panel."
+        },
+        "agenticToolbox.autoSync": {
+          "type": "boolean",
+          "default": true,
+          "scope": "window",
+          "description": "Keep toolbox-managed skills and the active AGENTS.md profile synchronized with their source libraries."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.mjs --production",
+    "watch": "node esbuild.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run typecheck && npm test && npm run build",
+    "package": "npm run check && vsce package --no-dependencies --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.17",
+    "@types/vscode": "1.95.0",
+    "@vscode/vsce": "^3.9.2",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  }
+}

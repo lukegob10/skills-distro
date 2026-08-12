@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Toolbox Visual Harness</title>
+    <style>
+      :root {
+        --vscode-sideBar-background: #18181b;
+        --vscode-editor-background: #121214;
+        --vscode-foreground: #f0f0f2;
+        --vscode-descriptionForeground: #92929e;
+        --vscode-button-background: #6f5bd8;
+        --vscode-button-foreground: #fff;
+        --vscode-button-hoverBackground: #806ce6;
+        --vscode-focusBorder: #8a78ef;
+        --vscode-input-background: #111114;
+        --vscode-input-foreground: #f0f0f2;
+        --vscode-input-placeholderForeground: #777783;
+        --vscode-textLink-foreground: #78a9ff;
+        --vscode-notifications-background: #242429;
+        --vscode-font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --vscode-editor-font-family: "Cascadia Code", Consolas, monospace;
+      }
+      html { width: min(360px, 100vw); margin: 0 auto; background: #0d0d0f; }
+      body { min-height: 900px; box-shadow: 0 0 0 1px #2a2a30, 0 20px 80px #0008; }
+      html.light {
+        --vscode-sideBar-background: #f7f7fa;
+        --vscode-editor-background: #fff;
+        --vscode-foreground: #222229;
+        --vscode-descriptionForeground: #6d6d78;
+        --vscode-button-background: #6551cf;
+        --vscode-button-foreground: #fff;
+        --vscode-button-hoverBackground: #5744bd;
+        --vscode-focusBorder: #6551cf;
+        --vscode-input-background: #fff;
+        --vscode-input-foreground: #222229;
+        --vscode-input-placeholderForeground: #868691;
+        --vscode-textLink-foreground: #4f5fc4;
+        --vscode-notifications-background: #fff;
+        background: #e9e9ee;
+      }
+    </style>
+    <link rel="stylesheet" href="../media/panel.css">
+  </head>
+  <body>
+    <main id="app"></main>
+    <div id="toast-region" class="toast-region"></div>
+    <script>
+      if (location.search.includes('light')) document.documentElement.classList.add('light');
+      const sampleState = {
+        workspaces: [{ id: 'demo', name: 'customer-portal', path: 'F:\\vault\\projects\\customer-portal' }],
+        selectedWorkspaceId: 'demo',
+        workspaceReady: true,
+        skillsLibrary: { path: 'F:\\vault\\skills_development\\my-skills', valid: true },
+        agentsLibrary: { path: 'F:\\vault\\projects\\agents-family', valid: true },
+        autoSync: true,
+        skills: [
+          { id: 'email', name: 'Email Writer', description: 'Draft concise, high-signal business email with the right tone.', category: '01 Dailies', groupId: '01-dailies', groupName: '01 Dailies', sourcePath: 'F:\\skills\\email-writer', destinationName: 'email-writer', signature: 'a', state: 'installed', installed: true },
+          { id: 'sip', name: 'SIP Agent', description: 'Operate scoped program and project workflows through the SIP agent API.', category: '01 Dailies', groupId: '01-dailies', groupName: '01 Dailies', sourcePath: 'F:\\skills\\sip', destinationName: 'sip', signature: 's', state: 'available', installed: false },
+          { id: 'angular', name: 'Enterprise Angular', description: 'Build accessible Angular applications with modern architecture and strict conventions.', category: '02 Development', groupId: '02-development', groupName: '02 Development', sourcePath: 'F:\\skills\\angular', destinationName: 'angular', signature: 'b', state: 'update', installed: true },
+          { id: 'research', name: 'Deep Research', description: 'Plan, source, verify, and synthesize rigorous research deliverables.', category: '03 Research', groupId: '03-research', groupName: '03 Research', sourcePath: 'F:\\skills\\research', destinationName: 'research', signature: 'c', state: 'available', installed: false },
+          { id: 'sheets', name: 'Spreadsheet Analyst', description: 'Analyze and validate complex workbook models.', category: '04 Data', groupId: '04-data', groupName: '04 Data', sourcePath: 'F:\\skills\\sheets', destinationName: 'sheets', signature: 'd', state: 'modified', installed: true }
+        ],
+        profiles: [
+          { id: 'python', name: 'Python Engineering', description: 'Typed, testable Python with small modules and explicit boundaries.', category: 'Languages', sourcePath: 'F:\\agents\\python.md', signature: 'p', preview: '# Python Engineering\n\nUse type hints for all public APIs. Keep modules cohesive and dependencies explicit.', state: 'active', active: true },
+          { id: 'data', name: 'Data Analysis', description: 'Reproducible analysis, careful validation, and clear reporting.', category: 'Data', sourcePath: 'F:\\agents\\data.md', signature: 'd', preview: '# Data Analysis\n\nValidate inputs before transforming data.', state: 'available', active: false },
+          { id: 'go', name: 'Go Services', description: 'Idiomatic Go services with narrow interfaces and observable operations.', category: 'Languages', sourcePath: 'F:\\agents\\go.md', signature: 'g', preview: '# Go Services\n\nKeep interfaces small and errors contextual.', state: 'available', active: false }
+        ],
+        activities: [{ id: '1', kind: 'install', message: 'Installed Email Writer.', timestamp: new Date().toISOString() }],
+        lastRefresh: new Date().toISOString()
+      };
+      window.acquireVsCodeApi = () => ({
+        getState: () => ({}),
+        setState: () => {},
+        postMessage: (message) => {
+          if (message.type === 'ready' || message.type === 'refresh') {
+            setTimeout(() => window.dispatchEvent(new MessageEvent('message', { data: { type: 'state', state: sampleState } })), 0);
+          }
+        }
+      });
+    </script>
+    <script src="../media/panel.js"></script>
+  </body>
+</html>

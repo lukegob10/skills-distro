@@ -1,0 +1,54 @@
+name: Build and release VSIX
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Validate, package, and release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate and package
+        run: npm run package
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(node -p "require('./package.json').version")"
+          tag="v${version}-build.${GITHUB_RUN_NUMBER}"
+          vsix="$(find . -maxdepth 1 -name '*.vsix' -print -quit)"
+
+          if [[ -z "$vsix" ]]; then
+            echo "No VSIX package was produced." >&2
+            exit 1
+          fi
+
+          gh release create "$tag" "$vsix" \
+            --target "$GITHUB_SHA" \
+            --title "Agentic Toolbox ${tag}" \
+            --generate-notes \
+            --latest
